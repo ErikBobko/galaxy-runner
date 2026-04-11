@@ -84,7 +84,7 @@ class Game:
             if self.slow_down_cycle == 60:
                 self.round_time += 1
                 self.slow_down_cycle = 0
-                print(self.round_time)
+                
 
             # RED STAR SPAWN
             if self.round_time % 25 == 0 and not self.red_star_spawned and self.score > 10:
