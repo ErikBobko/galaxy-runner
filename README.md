@@ -15,6 +15,13 @@ The goal is to get the highest score before losing all lives.
 
 ---
 
+## 🎮 Controls
+
+- Arrow keys → Move spaceship  
+- R → Restart game
+
+---
+
 ## 🛠️ Technologies Used
 
 * Python
