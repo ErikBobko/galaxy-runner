@@ -200,7 +200,7 @@ class Game:
                     self.exploding = True
                     self.explosion_index = 0
 
-
+                    self.final_game_over = True
                     self.player.alive = False
                     self.game_over = True
                     self.explosion_target_rect = self.player.rect.copy()
