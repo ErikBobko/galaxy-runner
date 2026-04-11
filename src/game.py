@@ -137,7 +137,6 @@ class Game:
                 self.exploding = False
                 self.game_over = True
         else:
-            if self.player.alive:
                 self.player.draw(screen)
 
         # TEXT HUD
@@ -198,10 +197,13 @@ class Game:
                 self.player.lives -= 1
                 self.crash.play()
                 if self.player.lives <= 0:
-                    self.final_game_over = True
-                    self.game_over = True
+                    self.exploding = True
+                    self.explosion_index = 0
+
+
                     self.player.alive = False
-                    self.player.rect.center = (width // 2, height // 2)
+                    self.game_over = True
+                    self.explosion_target_rect = self.player.rect.copy()
                     self.player.image = self.player.original_image
                     self.player.speed = 5
                     pygame.mixer_music.stop()
