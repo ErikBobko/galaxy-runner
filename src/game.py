@@ -124,6 +124,16 @@ class Game:
                 self.shield_activate = False
                 self.player.original_image = self.player_default_image
 
+        # Fix: prevent player death when shield expires near screen edge
+
+                if self.player.rect.left < 0:
+                    self.player.rect.left = 0
+                if self.player.rect.right > width:
+                    self.player.rect.right = width
+                if self.player.rect.top < 90:
+                    self.player.rect.top = 90
+                if self.player.rect.bottom > height:
+                    self.player.rect.bottom = height
 
     # DRAW EVERYTHING
     def draw(self):
