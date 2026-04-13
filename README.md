@@ -56,9 +56,9 @@ python main.py
 
 ---
 
-## 📸 Screenshot
+## 🎮 Gameplay
 
-![Gameplay](screenshots/gameplay.png)
+![Gameplay](assets/demo/gameplay.gif)
 
 ---
 
