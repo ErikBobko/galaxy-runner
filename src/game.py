@@ -29,6 +29,7 @@ class Game:
         self.red_star_spawned = False
         self.blue_star_spawned = False
         self.shield_activate = False
+        self.shield_start_time = 0
 
         # FONTS
         self.my_font = pygame.font.Font("../assets/fonts/space-font.ttf", 25)
@@ -54,6 +55,10 @@ class Game:
         self.collect_blue_star = pygame.mixer.Sound("../assets/media/space-shield-activate.wav")
         self.collect_blue_star.set_volume(0.3)
 
+        #SHIELD - DEFAULT
+        self.shield = pygame.image.load("../assets/img/space-ship-shield.png")
+        self.player_default_image = self.player.original_image.copy()
+
     # HANDLE INPUT
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN:
@@ -78,6 +83,7 @@ class Game:
             self.player.update()
             self.collision_checker()
             self.activation_items()
+
 
             # Round timer
             self.slow_down_cycle += 1
@@ -114,9 +120,10 @@ class Game:
 
         # SHIELD TIMER
         if self.shield_activate:
-            if self.round_time - self.blue_star_timer >= self.shield_dur:
+            if self.round_time - self.shield_start_time >= self.shield_dur:
                 self.shield_activate = False
-                self.player.original_image = pygame.image.load("../assets/img/space-ship.png")
+                self.player.original_image = self.player_default_image
+
 
     # DRAW EVERYTHING
     def draw(self):
@@ -186,7 +193,8 @@ class Game:
             elif star.type == "blue":
                 self.collect_blue_star.play()
                 self.shield_activate = True
-                self.blue_star_timer = self.round_time  # timer set when player collects blue star
+                self.shield_start_time = self.round_time
+                self.player.original_image = self.shield
                 star.kill()
 
         # PLAYER - ASTEROID / SCREEN COLLISION
@@ -204,7 +212,6 @@ class Game:
                     self.player.alive = False
                     self.game_over = True
                     self.explosion_target_rect = self.player.rect.copy()
-                    self.player.image = self.player.original_image
                     self.player.speed = 5
                     pygame.mixer_music.stop()
                 else:
@@ -213,6 +220,7 @@ class Game:
                     self.explosion_index = 0
                     self.explosion_target = self.player
                     self.player.alive = False
+
 
     # ACTIVATION ITEMS
     def activation_items(self):
@@ -229,9 +237,6 @@ class Game:
                     asteroid.rect.y = 20
                     asteroid.rect.x = random.randint(0, width - asteroid.rect.width)
 
-        if self.shield_activate:
-            self.player.original_image = pygame.image.load("../assets/img/space-ship-shield.png")
-
     # RESET GAME
     def reset_game(self):
         if self.final_game_over:
@@ -244,6 +249,5 @@ class Game:
         self.player.rect.center = (width // 2, height // 2)
         self.player.alive = True
         self.player.direction = None
-        self.player.image = self.player.original_image
         self.asteroid.empty()
         self.asteroid.add(Asteroid(asteroid_images[0], speed=1))
