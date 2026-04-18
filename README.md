@@ -40,7 +40,10 @@ pip install pygame
 2. Run the game:
 
 ```
-python main.py
+1. Go to Releases
+2. Download the latest version (zip file)
+3. Extract it
+4. Run game.exe
 ```
 
 ---
