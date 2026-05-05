@@ -31,6 +31,12 @@ class Game:
         self.shield_activate = False
         self.shield_start_time = 0
 
+        self.leaderboard = [
+            {"name": "TEST", "country": "SK", "score": 10},
+            {"name": "TEST2", "country": "CZ", "score": 5},
+            {"name": "TEST3", "country": "DE", "score": 2},
+        ]
+
         # FONTS
         self.my_font = pygame.font.Font("../assets/fonts/space-font.ttf", 25)
 
@@ -166,7 +172,7 @@ class Game:
         restart_text = self.my_font.render("Press R to restart", True, white)
         restart_text_rect = restart_text.get_rect(center=(600, 200))
         game_over_text = self.my_font.render(f"GAME OVER your final score is {self.score}", True, red)
-        game_over_text_rect = game_over_text.get_rect(center=(600, 400))
+        game_over_text_rect = game_over_text.get_rect(center=(600, 300))
         start_game_text = self.my_font.render("Press arrow key to start", True, white)
         start_game_text_rect = start_game_text.get_rect(center=(600, 300))
 
@@ -184,6 +190,22 @@ class Game:
             screen.blit(start_game_text, start_game_text_rect)
         if not self.final_game_over:
             pygame.draw.rect(screen, dark_blue, (0, 80, 1200, 720), 2)
+
+
+        if self.final_game_over:
+            lb_title = self.my_font.render("TOP 3 PLAYERS", True, (255, 255, 0))
+            lb_title_rect = lb_title.get_rect(center=(600, 400))
+            screen.blit(lb_title, lb_title_rect)
+
+        # SCORES
+
+            for i, entry in enumerate(self.leaderboard[:3]):
+                color = (255, 215, 0) if i == 0 else (255, 255, 255)
+                text = self.my_font.render(
+                    f"{i + 1}. {entry['name']} ({entry['country']}) - {entry['score']}",
+                    True,
+                    color)
+
 
     # COLLISION CHECKER
     def collision_checker(self):
