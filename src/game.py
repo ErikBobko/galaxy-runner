@@ -31,6 +31,15 @@ class Game:
         self.shield_activate = False
         self.shield_start_time = 0
 
+        self.enter_name = True
+        self.input_text = ""
+        self.player_name = ""
+        self.player_country = ""
+        self.input_stage = "name"
+
+        self.countries = ["Slovakia", "Czech Republic", "Germany", "Austria", "Poland", "Hungary"]
+        self.country_index = 0
+
         self.leaderboard = [
             {"name": "TEST", "country": "SK", "score": 10},
             {"name": "TEST2", "country": "CZ", "score": 5},
@@ -68,6 +77,36 @@ class Game:
     # HANDLE INPUT
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN:
+            if self.enter_name:
+
+                if event.key == pygame.K_RETURN:
+
+                    if self.input_stage == "name":
+                        self.player_name = self.input_text
+                        self.input_text = ""
+                        self.input_stage = "country"
+
+                    else:
+                        self.player_country = self.countries[self.country_index]
+                        self.enter_name = False
+
+                elif self.input_stage == "country":
+
+
+                    if event.key == pygame.K_UP:
+                        self.country_index = (self.country_index - 1) % len(self.countries)
+
+                    elif event.key == pygame.K_DOWN:
+                        self.country_index = (self.country_index + 1) % len(self.countries)
+
+                elif event.key == pygame.K_BACKSPACE and self.input_stage == "name":
+                    self.input_text = self.input_text[:-1]
+
+                elif self.input_stage == "name":
+                    self.input_text += event.unicode
+
+                return
+
             if event.key == pygame.K_r and self.game_over:
                 self.reset_game()
             if not self.game_start:
@@ -161,6 +200,27 @@ class Game:
                 self.game_over = True
         else:
                 self.player.draw(screen)
+        if self.enter_name:
+            screen.fill((0, 0, 0))
+            label = "ENTER NAME:" if self.input_stage == "name" else "ENTER COUNTRY:"
+            if self.input_stage == "country":
+                for i, country in enumerate(self.countries):
+                    color = (0, 255, 0) if i == self.country_index else (255, 255, 255)
+
+                    text = self.my_font.render(country, True, color)
+                    text_rect = text.get_rect(center=(width // 2, 350 + i * 30))
+                    screen.blit(text, text_rect)
+
+                return
+            text = self.my_font.render(label, True, (255, 255, 255))
+            text_rect = text.get_rect(center=(width // 2, 300))
+            screen.blit(text, text_rect)
+
+            name_text = self.my_font.render(self.input_text, True, (0, 255, 0))
+            name_text_rect = name_text.get_rect(center=(width // 2, 350))
+            screen.blit(name_text, name_text_rect)
+
+            return
 
         # TEXT HUD
         main_text = self.my_font.render("GALAXY RUNNER", True, white)
@@ -181,16 +241,28 @@ class Game:
         screen.blit(score_text, score_text_rect)
         screen.blit(lives_text, lives_text_rect)
         if self.final_game_over:
+
+            # BACKGROUND BOX
+
+            overlay = pygame.Surface((500, 250))
+            overlay.set_alpha(180)
+            overlay.fill((0, 0, 0))
+            screen.blit(overlay, (350, 350))
+
             screen.blit(restart_text, restart_text_rect)
             screen.blit(game_over_text, game_over_text_rect)
             pygame.draw.rect(screen, red, (0, 80, 1200, 720), 2)
+
         elif self.game_over:
             screen.blit(restart_text, restart_text_rect)
+
         elif not self.game_start:
             screen.blit(start_game_text, start_game_text_rect)
+
         if not self.final_game_over:
             pygame.draw.rect(screen, dark_blue, (0, 80, 1200, 720), 2)
 
+            # LEADERBOARD (TOP 3)
 
         if self.final_game_over:
             lb_title = self.my_font.render("TOP 3 PLAYERS", True, (255, 255, 0))
@@ -205,6 +277,9 @@ class Game:
                     f"{i + 1}. {entry['name']} ({entry['country']}) - {entry['score']}",
                     True,
                     color)
+
+                text_rect = text.get_rect(topleft=(450, 450 + i * 40))
+                screen.blit(text, text_rect)
 
 
     # COLLISION CHECKER
