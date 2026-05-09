@@ -353,6 +353,7 @@ class Game:
 
     # RESET GAME
     def reset_game(self):
+        self.score_sent = False
         if self.final_game_over:
             self.score = 0
             self.player.lives = 3
