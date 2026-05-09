@@ -365,4 +365,5 @@ class Game:
         self.player.direction = None
         self.asteroid.empty()
         self.asteroid.add(Asteroid(asteroid_images[0], speed=1))
+        self.leaderboard = get_leaderboard()
 
