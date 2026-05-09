@@ -1,10 +1,10 @@
 import requests
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "https://galaxy-runner.onrender.com"
 
 def send_score(name, country, score):
     try:
         res = requests.post(
-            "http://127.0.0.1:8000/score",
+            f"{BASE_URL}/score",
             json={
                 "name": name,
                 "country": country,
