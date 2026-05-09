@@ -303,7 +303,7 @@ class Game:
                 star.kill()
 
         # PLAYER - ASTEROID / SCREEN COLLISION
-        hits = pygame.sprite.spritecollide(self.player, self.asteroid, False)
+
         if not self.shield_activate:
             out_of_bounds = (
                     self.player.rect.left < 0 or
@@ -311,6 +311,8 @@ class Game:
                     self.player.rect.top < 90 or
                     self.player.rect.bottom > height
             )
+
+            hit_asteroid = pygame.sprite.spritecollide(self.player, self.asteroid, False)
 
             if not self.shield_activate and (hit_asteroid or out_of_bounds):
                 self.player.lives -= 1
