@@ -4,6 +4,7 @@ import random
 from config import *
 from asteroid import Asteroid
 from stars import Stars
+from network import send_score, get_leaderboard
 
 
 class Game:
@@ -12,6 +13,7 @@ class Game:
         self.asteroid = asteroid
         self.star = star
         self.score = 0
+        self.leaderboard = []
 
         self.round_time = 0
         self.slow_down_cycle = 0
@@ -22,6 +24,7 @@ class Game:
         self.blue_star_timer = 0
         self.shield_dur = 20
 
+        self.score_sent = False
         self.game_over = False
         self.game_start = False
         self.exploding = False
@@ -40,11 +43,6 @@ class Game:
         self.countries = ["Slovakia", "Czech Republic", "Germany", "Austria", "Poland", "Hungary"]
         self.country_index = 0
 
-        self.leaderboard = [
-            {"name": "TEST", "country": "SK", "score": 10},
-            {"name": "TEST2", "country": "CZ", "score": 5},
-            {"name": "TEST3", "country": "DE", "score": 2},
-        ]
 
         # FONTS
         self.my_font = pygame.font.Font("../assets/fonts/space-font.ttf", 25)
@@ -321,6 +319,15 @@ class Game:
                     self.explosion_target_rect = self.player.rect.copy()
                     self.player.speed = 5
                     pygame.mixer_music.stop()
+
+                    if not self.score_sent:
+                        send_score(
+                            self.player_name,
+                            self.player_country,
+                            self.score
+                        )
+                        self.score_sent = True
+                        self.leaderboard = get_leaderboard()
                 else:
                     self.game_over = True
                     self.exploding = True
@@ -358,3 +365,4 @@ class Game:
         self.player.direction = None
         self.asteroid.empty()
         self.asteroid.add(Asteroid(asteroid_images[0], speed=1))
+
