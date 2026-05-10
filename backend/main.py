@@ -21,16 +21,6 @@ ALLOWED_COUNTRIES = [
     "Hungary"
 ]
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS scores (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    country TEXT,
-    score INTEGER
-)
-""")
-connection.commit()
-
 class Score(BaseModel):
     name: str
     country: str
